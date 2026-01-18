@@ -2,8 +2,8 @@
 $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 
 # downloads available on this page: https://www.sonicwall.com/products/remote-access/vpn-clients/
-$url        = 'https://software.sonicwall.com/NetExtender/NetExtender-x86-10.3.2.msi'
-$url64bit      = 'https://software.sonicwall.com/NetExtender/NetExtender-x64-10.3.2.msi'
+$url        = 'https://software.sonicwall.com/NetExtender/NetExtender-x86-10.3.3.msi'
+$url64bit      = 'https://software.sonicwall.com/NetExtender/NetExtender-x64-10.3.3.msi'
 
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
@@ -11,11 +11,11 @@ $packageArgs = @{
   softwareName  = 'netextender*'
 
   url           = $url
-  checksum      = '566FD2DDCC853DD9E96A39922AB1C4EEB685081C74112E4B644957F67DDECE29'
+  checksum      = '9976F349F3B33A0DD5AFC839E9CB0C66AF09E4750773E6A00743EEDB96374505'
   checksumType  = 'sha256'
 
   url64bit      = $url64bit
-  checksum64    = '793E2ED53A2D7457F387C36F2828177B63FE120DFB2B27F824BB457B78EC8AB1'
+  checksum64    = 'A349F2160C3F729DF5461BA3F3387518C98B8C455D70EF25DADAA89893923352'
   checksumType64= 'sha256'
 
 

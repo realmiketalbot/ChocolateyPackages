@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>netextender</id>
-    <version>10.3.2</version>
+    <version>10.3.3</version>
     <packageSourceUrl>https://github.com/realmiketalbot/ChocolateyPackages/tree/main/netextender</packageSourceUrl>
     <owners>Mike Talbot</owners>
     
