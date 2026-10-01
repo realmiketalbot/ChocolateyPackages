@@ -10,3 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Version 5.3.7 executibles
+
+## [5.5.0] - 2026-10-01
+
+### Changed
+
+- Version 5.5.0 executables (64-bit only; upstream no longer publishes a 32-bit build)
+- Added vcredist140 dependency
