@@ -5,3 +5,7 @@ Packages that are currently subject to automation (triggered weekly on Sundays) 
 - HEC-HMS
 - HEC-RAS
 - NetExtender
+- SAGA GIS
+- SWMM
+- TauDEM
+- WhiteboxTools
