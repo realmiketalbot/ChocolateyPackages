@@ -4,11 +4,11 @@ $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
   fileType      = 'exe'
-  url           = 'https://github.com/HydrologicEngineeringCenter/hec-downloads/releases/download/1.0.33/HEC-RAS_66_Setup.exe'
+  url           = 'https://github.com/HydrologicEngineeringCenter/hec-downloads/releases/download/1.0.46/HEC-RAS_701_Setup.exe'
 
   softwareName  = 'hec-ras*'
 
-  checksum      = '42A370B17A43892B17BD941DD0DB5415B97CBAE6C9CDA38EB11544ECE74715EB'
+  checksum      = '1FE76297076AA7A13E43191ECC76C3BA152FDC4BBD606FA2C349EEC7DB3CEE73'
   checksumType  = 'sha256'
 
   silentArgs   = '/s /v"/qn"' 

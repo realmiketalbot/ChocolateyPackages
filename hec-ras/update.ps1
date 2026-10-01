@@ -20,6 +20,8 @@ function Convert-RasTokenToVersion {
 
   # Common tokens:
   # 66  -> 6.6
+  # 70  -> 7.0
+  # 701 -> 7.0.1
   # 641 -> 6.4.1
   # 631 -> 6.3.1
   # 610 -> 6.1 (or 6.1.0; we drop trailing .0)
@@ -37,49 +39,42 @@ function Convert-RasTokenToVersion {
   return "$major.$minor"
 }
 
-function Get-HecRas66WindowsInstallerFromHecSite {
-  $downloadPage = 'https://www.hec.usace.army.mil/software/hec-ras/download.aspx'
-  Write-Host "Fetching HEC-RAS download page: $downloadPage"
-
-  $r = Invoke-WebRequest -Uri $downloadPage -UseBasicParsing -TimeoutSec 60
-  $html = $r.Content
-
-  # Grab only the "HEC-RAS 6.6 Windows:" section up to the next major heading
-  # (This avoids Beta, Archives, etc.)
-  $sec = [regex]::Match(
-    $html,
-    '(?is)HEC-RAS\s+6\.6\s+Windows:\s*(?<body>.*?)(?:HEC-RAS\s+6\.6\s+Example\s+Projects:|HEC-RAS\s+Archived\s+Versions\s+Windows:|HEC-RAS\s+6\.6\s+Linux:|\z)'
-  )
-  if (-not $sec.Success) {
-    throw "Could not locate the HEC-RAS 6.6 Windows section."
+function Get-LatestHecRasFromHecDownloads {
+  $headers = @{
+    'User-Agent' = 'Chocolatey-AU'
+    'Accept'     = 'application/vnd.github+json'
   }
 
-  $body = $sec.Groups['body'].Value
+  Write-Host "Querying GitHub releases: $ReleasesApi"
+  $releases = Invoke-RestMethod -Uri $ReleasesApi -Headers $headers -TimeoutSec 60
 
-  # Find a Setup.exe link inside that section. Allow .EXE and optional query string.
-  $m = [regex]::Match(
-    $body,
-    '(?is)href\s*=\s*["''](?<url>[^"'']*Setup\.exe(?:\?[^"'']*)?)["'']'
-  )
-  if (-not $m.Success) {
-    # Helpful debug if it still fails
-    $snippet = $body.Substring(0, [Math]::Min(1200, $body.Length))
-    Write-Host "DEBUG section snippet (first 1200 chars):"
-    Write-Host $snippet
-    throw "Could not find a Windows Setup.exe link in the HEC-RAS 6.6 Windows section."
+  if (-not $releases) { throw "No releases returned from $ReleasesApi" }
+
+  foreach ($rel in $releases) {
+    if ($rel.draft -or $rel.prerelease) { continue }
+    if (-not $rel.assets) { continue }
+
+    # Only plain Windows installers with a 2-3 digit version token (e.g. HEC-RAS_66_Setup.exe,
+    # HEC-RAS_701_Setup.exe). This skips Beta/Alpha builds, "_with_Linux_" bundles, and
+    # year-named builds such as HEC-RAS_2025_*.
+    $asset = $rel.assets |
+      Where-Object { $_.name -match '^HEC-RAS_(\d{2,3})_Setup\.exe$' } |
+      Select-Object -First 1
+
+    if ($asset) {
+      $m = [regex]::Match($asset.name, '^HEC-RAS_(\d{2,3})_Setup\.exe$')
+      $version = Convert-RasTokenToVersion -Token $m.Groups[1].Value
+
+      return [pscustomobject]@{
+        Version = $version
+        Url     = $asset.browser_download_url
+        Asset   = $asset.name
+        Release = $rel.tag_name
+      }
+    }
   }
 
-  $href = $m.Groups['url'].Value
-  $url = if ($href -match '^https?://') {
-    $href
-  } else {
-    (New-Object System.Uri((New-Object System.Uri($downloadPage)), $href)).AbsoluteUri
-  }
-
-  return [pscustomobject]@{
-    Version = '6.6'
-    Url     = $url
-  }
+  throw "Could not find any asset matching HEC-RAS_(digits)_Setup.exe in recent releases."
 }
 
 function Get-Sha256FromUrl {
@@ -99,9 +94,9 @@ function Get-Sha256FromUrl {
 Import-Module au -ErrorAction Stop
 
 function global:au_GetLatest {
-  $latest = Get-HecRas66WindowsInstallerFromHecSite
+  $latest = Get-LatestHecRasFromHecDownloads
+  Write-Host "Selected asset: $($latest.Asset) (release: $($latest.Release))"
   Write-Host "Parsed version:  $($latest.Version)"
-  Write-Host "Installer URL:   $($latest.Url)"
 
   $sha256 = Get-Sha256FromUrl -Url $latest.Url
 
