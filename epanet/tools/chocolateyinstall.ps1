@@ -7,12 +7,12 @@ $packageArgs = @{
   fileType      = 'exe'
   url           = $url
 
-  softwareName  = 'epanet*'
+  softwareName  = 'EPANET*'
 
   checksum      = '79D9A585A557D13D8471D713D0AE093D9CCA67C14B8E573223D71EEE8B89F671'
   checksumType  = 'sha256'
 
-  silentArgs   = '/s /v"/qn"' 
+  silentArgs    = '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-' # Inno Setup
   validExitCodes= @(0, 3010, 1641)
 }
 

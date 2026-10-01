@@ -1,9 +1,10 @@
 ﻿$ErrorActionPreference = 'Stop';
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
-  softwareName  = 'epanet*' 
+  # Registered as 'EPANET 2.2'
+  softwareName  = 'EPANET*'
   fileType      = 'exe'
-  silentArgs   = '/s /v"/qn"' 
+  silentArgs    = '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART'
   validExitCodes= @(0, 3010, 1605, 1614, 1641)
 }
 
@@ -11,20 +12,13 @@ $packageArgs = @{
 
 if ($key.Count -eq 1) {
   $key | % {
-    $packageArgs['file'] = "$($_.UninstallString)" 
-
-    if ($packageArgs['fileType'] -eq 'exe') {
-      $packageArgs['silentArgs'] = "$($_.PSChildName) $($packageArgs['silentArgs'])"
-
-      $packageArgs['file'] = ''
-    } else {
-
-    }
+    # Inno Setup: run the registered uninstaller (unins000.exe) with the silent args
+    $packageArgs['file'] = "$($_.UninstallString)".Trim('"')
 
     Uninstall-ChocolateyPackage @packageArgs
   }
 } elseif ($key.Count -eq 0) {
-  Write-Warning "$packageName has already been uninstalled by other means."
+  Write-Warning "$($env:ChocolateyPackageName) has already been uninstalled by other means."
 } elseif ($key.Count -gt 1) {
   Write-Warning "$($key.Count) matches found!"
   Write-Warning "To prevent accidental data loss, no programs will be uninstalled."

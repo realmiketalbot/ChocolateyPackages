@@ -10,3 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Version 2.2 installer
+
+## [2.2.0.20261001] - 2026-10-01
+
+### Fixed
+
+- Install is now silent: the installer is Inno Setup, but the package passed InstallShield switches, so it ran interactively
+- Uninstaller now runs the Inno Setup uninstaller instead of applying MSI product-code logic

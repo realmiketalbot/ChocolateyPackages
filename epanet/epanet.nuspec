@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>epanet</id>
-    <version>2.2</version>
+    <version>2.2.0.20261001</version>
     <packageSourceUrl>https://github.com/realmiketalbot/ChocolateyPackages/tree/main/epanet</packageSourceUrl>
     <owners>Mike Talbot</owners>
     
