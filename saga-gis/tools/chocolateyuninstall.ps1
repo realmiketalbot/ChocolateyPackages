@@ -1,7 +1,8 @@
 ﻿$ErrorActionPreference = 'Stop';
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
-  softwareName  = 'saga-gis*' 
+  # Inno Setup registers the program as AppVerName, e.g. 'SAGA 9.13.0'
+  softwareName  = 'SAGA [0-9]*'
   fileType      = 'exe'
   silentArgs   = '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-' 
   validExitCodes= @(0, 3010, 1605, 1614, 1641)
@@ -11,15 +12,8 @@ $packageArgs = @{
 
 if ($key.Count -eq 1) {
   $key | % {
-    $packageArgs['file'] = "$($_.UninstallString)" 
-
-    if ($packageArgs['fileType'] -eq 'exe') {
-      $packageArgs['silentArgs'] = "$($_.PSChildName) $($packageArgs['silentArgs'])"
-
-      $packageArgs['file'] = ''
-    } else {
-
-    }
+    # Inno Setup: run the registered uninstaller (unins000.exe) with the silent args
+    $packageArgs['file'] = "$($_.UninstallString)".Trim('"')
 
     Uninstall-ChocolateyPackage @packageArgs
   }
