@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Version 9.13.0 installer
 
+## [9.13.0.20261001] - 2026-10-01
+
 ### Fixed
 
 - Uninstaller now finds the installed program (registered as `SAGA <version>`) and runs its Inno Setup uninstaller
