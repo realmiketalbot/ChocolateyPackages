@@ -9,7 +9,7 @@ $packageArgs = @{
   fileType      = 'exe'
   url           = $url
 
-  softwareName  = 'global-vpn-client*'
+  softwareName  = 'Global VPN Client*'
 
   checksum      = '2663dee4be9d346751d42bb1465b5d0138bcc99805790be0cb6f8f01574c1309'
   checksumType  = 'sha256'
@@ -29,6 +29,9 @@ $packageArgs = @{
   # silentArgs   = '/norestart /qn' # did not work 
   # silentArgs = '/verysilent /norestart '
   # silentArgs   = '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-' # did not work
+  # The installer is a WinRAR self-extractor that runs GVCInstall64.msi; -s keeps the extraction
+  # silent and -sp passes the quiet switches through to the MSI.
+  silentArgs    = '-s "-sp/qn /norestart"'
   validExitCodes= @(0, 3010, 1641)
 }
 
