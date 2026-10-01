@@ -1,0 +1,37 @@
+name: Keep scheduled workflows enabled
+
+# GitHub disables scheduled workflows after 60 days without repository
+# activity. Re-enabling them through the API resets that timer, so this
+# runs every Sunday (and on demand) for the AU update workflows and itself.
+# Running it manually also re-enables workflows that were already disabled.
+
+on:
+  schedule:
+    - cron: "17 0 * * 0"
+  workflow_dispatch: {}
+
+concurrency:
+  group: keepalive
+  cancel-in-progress: true
+
+permissions:
+  actions: write
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Enable workflows
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          for wf in update-netextender.yml update-hec-hms.yml update-hec-ras.yml keepalive.yml; do
+            before=$(gh api "repos/$REPO/actions/workflows/$wf" --jq .state)
+            gh api -X PUT "repos/$REPO/actions/workflows/$wf/enable"
+            after=$(gh api "repos/$REPO/actions/workflows/$wf" --jq .state)
+            echo "$wf: $before -> $after"
+          done
