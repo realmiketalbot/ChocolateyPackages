@@ -8,7 +8,7 @@ $url64bit      = 'https://software.sonicwall.com/NetExtender/NetExtender-x64-10.
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
   fileType      = 'msi'
-  softwareName  = 'netextender*'
+  softwareName  = 'SonicWall NetExtender*'
 
   url           = $url
   checksum      = 'F4A99CDC1D3DC2FB3C40CB1760F78379B9ED5C3ABD9626A47F74F037960F495C'
