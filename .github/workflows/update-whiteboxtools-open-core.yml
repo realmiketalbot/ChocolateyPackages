@@ -1,0 +1,54 @@
+name: AU package update (WhiteboxTools)
+
+on:
+  schedule:
+    - cron: "20 6 * * 0"
+  workflow_dispatch: {}
+
+concurrency:
+  group: au-whiteboxtools-open-core
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install AU
+        shell: pwsh
+        run: |
+          choco install au -y --no-progress
+          Import-Module au -ErrorAction Stop
+
+      - name: Run updater
+        shell: pwsh
+        working-directory: whiteboxtools-open-core
+        run: |
+          .\update.ps1 -UpdateChangelog
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "whiteboxtools-open-core: update to latest upstream release"
+          title: "whiteboxtools-open-core: update to latest upstream release"
+          body: |
+            Automated update via Chocolatey-AU.
+
+            - Updated installer URL and SHA256 in tools\chocolateyinstall.ps1
+            - Bumped nuspec version
+            - Updated changelog
+          branch: au/whiteboxtools-open-core
+          delete-branch: true
+          labels: |
+            automated
+            au

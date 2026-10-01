@@ -1,0 +1,54 @@
+name: AU package update (SAGA GIS)
+
+on:
+  schedule:
+    - cron: "40 5 * * 0"
+  workflow_dispatch: {}
+
+concurrency:
+  group: au-saga-gis
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install AU
+        shell: pwsh
+        run: |
+          choco install au -y --no-progress
+          Import-Module au -ErrorAction Stop
+
+      - name: Run updater
+        shell: pwsh
+        working-directory: saga-gis
+        run: |
+          .\update.ps1 -UpdateChangelog
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "saga-gis: update to latest upstream release"
+          title: "saga-gis: update to latest upstream release"
+          body: |
+            Automated update via Chocolatey-AU.
+
+            - Updated installer URL and SHA256 in tools\chocolateyinstall.ps1
+            - Bumped nuspec version
+            - Updated changelog
+          branch: au/saga-gis
+          delete-branch: true
+          labels: |
+            automated
+            au

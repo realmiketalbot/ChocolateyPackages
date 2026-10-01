@@ -29,7 +29,9 @@ jobs:
           REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
-          for wf in update-netextender.yml update-hec-hms.yml update-hec-ras.yml keepalive.yml; do
+          for wf in update-netextender.yml update-hec-hms.yml update-hec-ras.yml \
+                    update-taudem.yml update-saga-gis.yml update-swmm.yml \
+                    update-whiteboxtools-open-core.yml keepalive.yml; do
             before=$(gh api "repos/$REPO/actions/workflows/$wf" --jq .state)
             gh api -X PUT "repos/$REPO/actions/workflows/$wf/enable"
             after=$(gh api "repos/$REPO/actions/workflows/$wf" --jq .state)
