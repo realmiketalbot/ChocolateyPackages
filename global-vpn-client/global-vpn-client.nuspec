@@ -13,7 +13,7 @@
     <releaseNotes>https://www.sonicwall.com/techdocs/pdf/232-005972-00_GlobalVPNClient_ReleaseNotes.pdf</releaseNotes>
     <copyright>2023 SonicWall Inc.</copyright>
     <licenseUrl>http://help.sonicwall.com/help/sw/eng/8112/8/0/0/content/Appendix_EULA%20Warranty.30.4.html</licenseUrl>
-    <tags>globalvpn globalvpnclient global vpn client sonicwall sonic wall notSilent</tags>
+    <tags>globalvpn globalvpnclient global vpn client sonicwall sonic wall</tags>
     <summary>SonicWall Global VPN Client</summary>
     <description>The SonicWall™ Global VPN Client creates a Virtual Private Network (VPN) connection between your computer and the corporate network to maintain the confidentiality of private data. The Global VPN Client provides an easy-to-use solution for secure, encrypted access through the Internet for remote users.</description>
   </metadata>
