@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>taudem</id>
-    <version>5.3.7</version>
+    <version>5.5.0</version>
     <packageSourceUrl>https://github.com/realmiketalbot/ChocolateyPackages/tree/main/taudem</packageSourceUrl>
     <owners>Mike Talbot</owners>
     
@@ -15,7 +15,7 @@
     <copyright>2010-2015 David Tarboton, Utah State University</copyright>
     <licenseUrl>https://hydrology.usu.edu/taudem/taudem5/license.html</licenseUrl>
     <tags>taudem tau dem gis raster digital elevation model</tags>
-    <summary>TauDEM Command Line Executables for 32 or 64 bit Windows PC</summary>
+    <summary>TauDEM Command Line Executables for 64 bit Windows PC</summary>
     <description>
     TauDEM (Terrain Analysis Using Digital Elevation Models) is a suite of Digital Elevation Model (DEM) tools for the extraction and analysis of hydrologic information from topography as represented by a DEM. TauDEM provides the following capability:
       * Development of hydrologically conditioned (pit removed) DEMs using the flooding approach
@@ -27,7 +27,12 @@
       
     See the project home page for more information.
 
+    TauDEM requires the Microsoft MPI runtime, which is not installed by this package. It is available from https://learn.microsoft.com/en-us/message-passing-interface/microsoft-mpi
+
     </description>
+    <dependencies>
+      <dependency id="vcredist140" version="14.0" />
+    </dependencies>
   </metadata>
   <files>
     <file src="tools\**" target="tools" />
