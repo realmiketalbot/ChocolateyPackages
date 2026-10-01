@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>saga-gis</id>
-    <version>7.2.0</version>
+    <version>9.13.0</version>
     <packageSourceUrl>https://github.com/realmiketalbot/ChocolateyPackages/tree/main/saga-gis</packageSourceUrl>
     <owners>Mike Talbot</owners>
     
