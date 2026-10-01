@@ -40,3 +40,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Version 5.2.4 installer
+
+## [5.2.4.20261001] - 2026-10-01
+
+### Fixed
+
+- Uninstaller now finds the program (registered as `EPA SWMM 5.2.4 (64-bit)`) and runs the Inno Setup uninstaller

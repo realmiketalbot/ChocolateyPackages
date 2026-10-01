@@ -6,7 +6,7 @@ $url64bit      = 'https://epa.gov/system/files/other-files/2023-08/swmm524%28x64
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
   fileType      = 'exe'
-  softwareName  = 'swmm*'
+  softwareName  = 'EPA SWMM*'
 
   url           = $url
   checksum      = '621620044346DEA2EAB6B583B951FAF1AB5476F8F868FD648ED45E912B2AD1DA'
