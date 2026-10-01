@@ -36,8 +36,8 @@ jobs:
         shell: pwsh
         working-directory: netextender
         run: |
-          # Run without changing nuspec description from README
-          .\update.ps1
+          # update.ps1 passes -NoReadme, so the nuspec description is not overwritten from README
+          .\update.ps1 -UpdateChangelog
 
       # Create or update a PR if anything changed
       - name: Create Pull Request
@@ -50,6 +50,7 @@ jobs:
 
             - Updated installer URLs and SHA256 checksums in tools\chocolateyinstall.ps1
             - Bumped nuspec version
+            - Updated changelog
           branch: au/netextender
           delete-branch: true
           labels: |
