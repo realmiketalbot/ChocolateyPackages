@@ -46,3 +46,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Updated to HEC-HMS 4.14
+
+## [4.14.0.20261001] - 2026-10-01
+
+### Fixed
+
+- Uninstaller now removes the program by its MSI product code; it previously cleared the uninstaller path and could not run
