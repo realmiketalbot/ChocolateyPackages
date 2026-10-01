@@ -105,25 +105,85 @@ function Get-Sha256FromUrl {
   }
 }
 
+function Test-UrlExists {
+  param([Parameter(Mandatory=$true)][string]$Url)
+
+  try {
+    $r = Invoke-WebRequest -Uri $Url -Method Head -UseBasicParsing -TimeoutSec 30
+    return ($r.StatusCode -eq 200)
+  }
+  catch {
+    return $false
+  }
+}
+
+function Find-NetExtenderByProbe {
+  <#
+    Fallback for when the SonicWall API is unavailable (it began returning
+    "MSWAPP:RUNTIMEERR" in March 2026). Starting from the version in the nuspec,
+    HEAD-checks the predictable software.sonicwall.com MSI URLs for the next few
+    patch, minor and major versions, and returns the highest one published for
+    both x86 and x64. Returns $null if nothing newer than the current version exists.
+  #>
+
+  [xml]$nuspec = Get-Content -Path $NuspecPath
+  $current = [version]$nuspec.package.metadata.version
+  Write-Host "Probing software.sonicwall.com for versions newer than $current"
+
+  $candidates = @()
+  foreach ($patch in ($current.Build + 1)..($current.Build + 10)) { $candidates += "$($current.Major).$($current.Minor).$patch" }
+  foreach ($patch in 0..5) { $candidates += "$($current.Major).$($current.Minor + 1).$patch" }
+  foreach ($patch in 0..2) { $candidates += "$($current.Major + 1).0.$patch" }
+
+  $found = $null
+  foreach ($v in $candidates) {
+    $x64Url = "https://software.sonicwall.com/NetExtender/NetExtender-x64-$v.msi"
+    $x86Url = "https://software.sonicwall.com/NetExtender/NetExtender-x86-$v.msi"
+    if ((Test-UrlExists $x64Url) -and (Test-UrlExists $x86Url)) {
+      Write-Host "Found published version: $v"
+      if (-not $found -or [version]$v -gt [version]$found.Version) {
+        $found = [pscustomobject]@{ Version = $v; URL32 = $x86Url; URL64 = $x64Url }
+      }
+    }
+  }
+
+  return $found
+}
+
 Import-Module au -ErrorAction Stop
 
 function global:au_GetLatest {
-  $x64 = Get-NetExtenderMeta -Platform 'Windows-x64'
-  $x86 = Get-NetExtenderMeta -Platform 'Windows-x86'
+  try {
+    $x64 = Get-NetExtenderMeta -Platform 'Windows-x64'
+    $x86 = Get-NetExtenderMeta -Platform 'Windows-x86'
 
-  # Sanity: versions should match; if not, prefer x64 but warn loudly.
-  $version = $x64.Version
-  if ($x86.Version -ne $x64.Version) {
-    Write-Warning "x86 version ($($x86.Version)) != x64 version ($($x64.Version)); using x64 as package version."
+    # Sanity: versions should match; if not, prefer x64 but warn loudly.
+    $version = $x64.Version
+    if ($x86.Version -ne $x64.Version) {
+      Write-Warning "x86 version ($($x86.Version)) != x64 version ($($x64.Version)); using x64 as package version."
+    }
+    $url32 = $x86.Url
+    $url64 = $x64.Url
+  }
+  catch {
+    Write-Warning "SonicWall API lookup failed: $($_.Exception.Message). Falling back to URL probing."
+    $probe = Find-NetExtenderByProbe
+    if (-not $probe) {
+      Write-Host "No newer NetExtender version found by probing."
+      return 'ignore'
+    }
+    $version = $probe.Version
+    $url32   = $probe.URL32
+    $url64   = $probe.URL64
   }
 
-  $checksum32 = Get-Sha256FromUrl -Url $x86.Url
-  $checksum64 = Get-Sha256FromUrl -Url $x64.Url
+  $checksum32 = Get-Sha256FromUrl -Url $url32
+  $checksum64 = Get-Sha256FromUrl -Url $url64
 
   return @{
     Version    = $version
-    URL32      = $x86.Url
-    URL64      = $x64.Url
+    URL32      = $url32
+    URL64      = $url64
     Checksum32 = $checksum32
     Checksum64 = $checksum64
   }
