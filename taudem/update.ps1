@@ -20,6 +20,9 @@ function Get-LatestTauDem {
     'User-Agent' = 'Chocolatey-AU'
     'Accept'     = 'application/vnd.github+json'
   }
+  # In GitHub Actions, authenticate so requests count against this repository's limit
+  # rather than the anonymous 60/hour limit shared by everyone on the runner's IP
+  if ($env:GITHUB_TOKEN) { $headers['Authorization'] = "Bearer $env:GITHUB_TOKEN" }
 
   Write-Host "Querying GitHub releases: $ReleasesApi"
   $releases = Invoke-RestMethod -Uri $ReleasesApi -Headers $headers -TimeoutSec 60
