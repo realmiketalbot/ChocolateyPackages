@@ -32,6 +32,8 @@ jobs:
 
       - name: Run updater
         shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         working-directory: hec-ras
         run: |
           .\update.ps1 -UpdateChangelog
