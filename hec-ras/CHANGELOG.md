@@ -64,3 +64,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Uninstaller now removes the program by its MSI product code; it previously cleared the uninstaller path and could not run
+
+## [7.0.2] - 2026-11-01
+
+### Added
+
+- Version 7.0.2 installer
