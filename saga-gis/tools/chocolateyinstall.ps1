@@ -1,6 +1,6 @@
 ﻿$ErrorActionPreference = 'Stop';
 $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
-$url        = 'https://downloads.sourceforge.net/project/saga-gis/SAGA%20-%209/SAGA%20-%209.13.0/saga-9.13.0_msw_setup.exe'
+$url        = 'https://downloads.sourceforge.net/project/saga-gis/SAGA%20-%209/SAGA%20-%209.14.2/saga-9.14.2_msw_setup.exe'
 
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
@@ -9,7 +9,7 @@ $packageArgs = @{
 
   softwareName  = 'saga-gis*'
 
-  checksum      = 'FB014007581E2CADD24861E0D1A1204F5A7F2F4DD676C5A7123B4C6ABA82EDEB'
+  checksum      = 'E0DD957A57873F810CACC99F3832DD12D365199DA9F96B5D69BE5C4EF0DBF1A9'
   checksumType  = 'sha256'
 
   silentArgs    = '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-'
