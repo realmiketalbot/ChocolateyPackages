@@ -76,3 +76,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Uninstaller now finds the program (registered as `SonicWall NetExtender`); it previously searched for `netextender*` and never matched
+
+## [10.3.6] - 2026-11-22
+
+### Added
+
+- Version 10.3.6 installer
